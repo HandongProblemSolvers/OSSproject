@@ -4,11 +4,13 @@
 #include <stdbool.h> // bool, true, false가 정의된 헤더 파일
 #include <string.h>  // strchr, memset, memcpy 함수가 선언된 헤더 파일
 
+int totaltokensize = 0;
 // 토큰 종류 열거형
 typedef enum _TOKEN_TYPE
 {
     TOKEN_STRING, // 문자열 토큰
-    TOKEN_NUMBER, // 숫자 토큰
+    TOKEN_FLOAT,  // 숫자 토큰
+    TOKEN_INT,
     /*
     UNDEFINED = 0, 
     OBJECT = 1, 
@@ -21,10 +23,11 @@ typedef enum _TOKEN_TYPE
 // 토큰 구조체
 typedef struct _TOKEN
 {
-    TOKEN_TYPE type;   // 토큰 종류
-    union {            // 두 종류 중 한 종류만 저장할 것이므로 공용체로 만듦
-        char *string;  // 문자열 포인터
-        double number; // 실수형 숫자
+    TOKEN_TYPE type;     // 토큰 종류
+    union {              // 두 종류 중 한 종류만 저장할 것이므로 공용체로 만듦
+        char *string;    // 문자열 포인터
+        float floatnum; // 실수형 숫자
+        int intnum;
     };
     bool isArray; // 현재 토큰이 배열인지 표시
     int size;
@@ -43,7 +46,7 @@ typedef struct _JSON
     TOKEN tokens[TOKEN_COUNT]; // 토큰 배열
 } JSON;
 
-char * readFile(char *filename, int *readSize) // 파일을 읽어서 내용을 반환하는 함수
+char *readFile(char *filename, int *readSize) // 파일을 읽어서 내용을 반환하는 함수
 {
     FILE *fp = fopen(filename, "rb");
     if (fp == NULL)
@@ -53,12 +56,12 @@ char * readFile(char *filename, int *readSize) // 파일을 읽어서 내용을 
     char *buffer;
 
     // get file size
-    fseek(fp, 0, SEEK_END);     // move file pointer from 0 to end fo file
-    size = ftell(fp);           // get size of file
-    fseek(fp, 0, SEEK_SET);     // move file pointer back to 0
+    fseek(fp, 0, SEEK_END); // move file pointer from 0 to end fo file
+    size = ftell(fp);       // get size of file
+    fseek(fp, 0, SEEK_SET); // move file pointer back to 0
 
-    buffer = malloc(size + 1);      // allcate file size + 1 buffer
-    memset(buffer, 0, size + 1);    // init buffer with 0
+    buffer = malloc(size + 1);   // allcate file size + 1 buffer
+    memset(buffer, 0, size + 1); // init buffer with 0
 
     if (fread(buffer, size, 1, fp) < 1)
     {
@@ -74,26 +77,28 @@ char * readFile(char *filename, int *readSize) // 파일을 읽어서 내용을 
 
     fclose(fp); // close file
 
-    return buffer;  // retrun buffer which contains the json file
+    return buffer; // retrun buffer which contains the json file
 }
 
 void parseJSON(char *doc, int size, JSON *json) // JSON 파싱 함수
 {
-    int tokenIndex = 0;     // token idx
-    int pos = 0;            // position for traversing doc
+    int tokenIndex = 0; // token idx
+    int pos = 0;        // position for traversing doc
 
     // if doc dosn't start with '{', it's invalid json file
     // return
     if (doc[pos] != '{')
         return;
 
-    pos++;  // go to next char which comes after '{'
+    pos++; // go to next char which comes after '{'
 
     while (pos < size)
     {
-        switch (doc[pos]) // 문자의 종류에 따라 분기
+        switch (doc[pos])
         {
-        case '"': // 문자가 "이면 문자열
+
+        // strings
+        case '"':
         {
             // after reading '"', move position
             char *begin = doc + pos + 1;
@@ -118,20 +123,133 @@ void parseJSON(char *doc, int size, JSON *json) // JSON 파싱 함수
             // 문자열 시작 위치에서 문자열 길이만큼만 복사
             memcpy(json->tokens[tokenIndex].string, begin, stringLength);
 
-            tokenIndex++; // 토큰 인덱스 증가
+            tokenIndex++;                 // 토큰 인덱스 증가
             pos = pos + stringLength + 1; // 현재 위치 + 문자열 길이 + "(+ 1)
-;
+
+            break;
         }
-        // break;
+
+        // string array
+        case '[':
+        {
+            pos++;
+            int arrcnt = 0;
+            while (doc[pos] != ']') // 닫는 ]가 나오면 반복 종료
+            {
+
+                // 여기서는 문자열 배열만 처리
+                if (doc[pos] == '"') // 문자가 "이면 문자열
+                {
+                    // 문자열의 시작 위치를 구함. 맨 앞의 "를 제외하기 위해 + 1
+                    char *begin = doc + pos + 1;
+
+                    // 문자열의 끝 위치를 구함. 다음 "의 위치
+                    char *end = strchr(begin, '"');
+                    if (end == NULL) // "가 없으면 잘못된 문법이므로
+                        break;       // 반복을 종료
+
+                    int stringLength = end - begin; // 문자열의 실제 길이는 끝 위치 - 시작 위치
+
+                    // 토큰 배열에 문자열 저장
+                    json->tokens[tokenIndex].type = TOKEN_STRING;
+                    // 문자열 길이 + NULL 공간만큼 메모리 할당
+                    json->tokens[tokenIndex].string = malloc(stringLength + 1);
+                    // 현재 문자열은 배열의 요소
+                    // json->tokens[tokenIndex].isArray = true;
+                    // 할당한 메모리를 0으로 초기화
+                    memset(json->tokens[tokenIndex].string, 0, stringLength + 1);
+
+                    // 문서에서 문자열을 토큰에 저장
+                    // 문자열 시작 위치에서 문자열 길이만큼만 복사
+                    memcpy(json->tokens[tokenIndex].string, begin, stringLength);
+
+                    tokenIndex++;                 // 토큰 인덱스 증가
+                    arrcnt++;
+                    json->tokens[tokenIndex-arrcnt-1].size++;
+                    json->tokens[tokenIndex-arrcnt-1].isArray = 1;
+                    // printf("%s : %d\n", json->tokens[tokenIndex-arrcnt-1].string, json->tokens[tokenIndex-arrcnt-1].size);
+                    pos = pos + stringLength + 1; // 현재 위치 + 문자열 길이 + "(+ 1)
+                }
+                pos++; // 다음 문자로
+            }
+            break;
+        }
+
+            // numbers
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5': // 문자가 숫자이면
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case '-': // -는 음수일 때
+        {
+            // 문자열의 시작 위치를 구함
+            char *begin = doc + pos;
+            char *end;
+            char *buffer;
+            int i = 0;
+            // 문자열의 끝 위치를 구함. ,가 나오거나
+            end = strchr(doc + pos, ',');
+            if (end == NULL)
+            {
+                // } 가 나오면 문자열이 끝남
+                end = strchr(doc + pos, '}');
+                if (end == NULL) // }가 없으면 잘못된 문법이므로
+                    break;       // 반복을 종료
+            }
+
+            int stringLength = end - begin; // 문자열의 실제 길이는 끝 위치 - 시작 위치
+
+            // 문자열 길이 + NULL 공간만큼 메모리 할당
+            buffer = malloc(stringLength + 1);
+            // 할당한 메모리를 0으로 초기화
+            memset(buffer, 0, stringLength + 1);
+
+            // 문서에서 문자열을 버퍼에 저장
+            // 문자열 시작 위치에서 문자열 길이만큼만 복사
+            memcpy(buffer, begin, stringLength);
+            printf("buffer test : %s\n", buffer);
+            printf("%d %f", atoi(buffer), atof(buffer));
+            // 토큰 종류는 숫자
+
+            for(i = 0; i < strlen(buffer); i++){
+                if (buffer[i] == '.') break;
+            }
+            if (i == strlen(buffer)) {
+                // int
+                json->tokens[tokenIndex].type = TOKEN_INT;
+                json->tokens[tokenIndex].intnum = atoi(buffer);
+            }
+            else {
+                // float
+                json->tokens[tokenIndex].type = TOKEN_FLOAT;
+                json->tokens[tokenIndex].floatnum = atof(buffer);                
+            }
+
+            free(buffer); // 버퍼 해제
+
+            tokenIndex++; // 토큰 인덱스 증가
+
+            pos = pos + stringLength + 1; // 현재 위치 + 문자열 길이 + , 또는 }(+ 1)
+        }
+        break;
         }
 
         pos++; // 다음 문자로
-        if (doc[pos] == ':') {
+
+        // control size when it's pair
+        if (doc[pos] == ':')
+        {
             json->tokens[--tokenIndex].size++;
             tokenIndex++;
         }
-
     }
+    totaltokensize = tokenIndex;
 }
 
 void freeJSON(JSON *json) // JSON 해제 함수
@@ -149,33 +267,73 @@ int main()
 
     // assign file content to one big string named doc
     // get size of file
-    char *doc = readFile("example.json", &size);
+    char *doc = readFile("example3.json", &size);
     if (doc == NULL)
         return -1;
 
     // allocate & init json struct
-    JSON json = { 0, };
+    JSON json = {
+        0,
+    };
 
     // parse doc (which is same as input json file)
     parseJSON(doc, size, &json);
 
-    for (int i = 0; i < 6; i++){
-        printf("%s", json.tokens[i].string);
-        // printf("size : %d\n", json.tokens[i].size);
-        if (json.tokens[i].size != 0){
-            for (int j = 0 ; j < json.tokens[i].size; j++){
-                printf(": %s\n", json.tokens[i+1].string);
-            }
-        }
-    }
-    // printf("%s\n", json.tokens[1].string);    // 토큰에 저장된 문자열 출력(Title)
-    // printf("%s\n", json.tokens[3].string);    // 토큰에 저장된 문자열 출력(Genre)
-    // printf("%s\n", json.tokens[5].string); // 토큰에 저장된 문자열 출력(Director)
+    // printf("size : %d\n", totaltokensize);
 
+    for (int i = 0; i < totaltokensize; i++)
+    {
+
+        if (json.tokens[i].isArray) {
+            json.tokens[i].size--;
+        }
+        if (json.tokens[i].type == TOKEN_STRING) {
+            printf("type: %d %s\t", json.tokens[i].type, json.tokens[i].string);
+        }
+        else if (json.tokens[i].type == TOKEN_INT) { 
+            printf("type : %d %d\t", json.tokens[i].type, json.tokens[i].intnum);
+        }
+        else if (json.tokens[i].type == TOKEN_FLOAT) {
+            printf("type : %d %f\t", json.tokens[i].type ,json.tokens[i].floatnum);
+        }
+        printf("(is array : %d)", json.tokens[i].isArray);
+        printf("(size : %d)\n", json.tokens[i].size);
+
+        
+            // for (int j = 1; j <= json.tokens[i].size; j++)
+            // {
+            //     // here, there may be string or number
+            //     if (json.tokens[i + j].type == TOKEN_STRING)
+            //     {
+            //         printf("%s\n", json.tokens[i + j].string);
+            //     }
+            //     else if (json.tokens[i + j].type == TOKEN_INT)
+            //     {
+            //         printf("%d\n", json.tokens[i + j].intnum);
+            //     }
+            //     else if (json.tokens[i + j].type == TOKEN_FLOAT)
+            //     {
+            //         printf("%f\n", json.tokens[i + j].floatnum);
+            //     }
+            //     i++;
+            // }
+
+        // string
+        // if (json.tokens[i].type == TOKEN_STRING) {
+        //     printf("%s ", json.tokens[i].string);
+        //     printf("(size : %d) ", json.tokens[i].size);
+        //     if (json.tokens[i].size != 0){
+        //         for (int j = 0 ; j < json.tokens[i].size; j++){
+        //             printf("%s\n", json.tokens[i+1].string);
+        //             i++;
+        //         }
+        //     }
+        // }
+    }
     // free json struct
     freeJSON(&json);
 
-    // free char pointer 
+    // free char pointer
     free(doc);
 
     return 0;
