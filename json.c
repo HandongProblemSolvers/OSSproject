@@ -23,13 +23,14 @@ typedef enum _TOKEN_TYPE
 // 토큰 구조체
 typedef struct _TOKEN
 {
-    TOKEN_TYPE type;     // 토큰 종류
-    union {              // 두 종류 중 한 종류만 저장할 것이므로 공용체로 만듦
-        char *string;    // 문자열 포인터
+    TOKEN_TYPE type;    // 토큰 종류
+    union {             // 두 종류 중 한 종류만 저장할 것이므로 공용체로 만듦
+        char *string;   // 문자열 포인터
         float floatnum; // 실수형 숫자
         int intnum;
     };
     bool isArray; // 현재 토큰이 배열인지 표시
+    bool isArraytitle;
     int size;
     /*
     int start;
@@ -155,7 +156,7 @@ void parseJSON(char *doc, int size, JSON *json) // JSON 파싱 함수
                     // 문자열 길이 + NULL 공간만큼 메모리 할당
                     json->tokens[tokenIndex].string = malloc(stringLength + 1);
                     // 현재 문자열은 배열의 요소
-                    // json->tokens[tokenIndex].isArray = true;
+                    json->tokens[tokenIndex].isArray = true;
                     // 할당한 메모리를 0으로 초기화
                     memset(json->tokens[tokenIndex].string, 0, stringLength + 1);
 
@@ -163,10 +164,11 @@ void parseJSON(char *doc, int size, JSON *json) // JSON 파싱 함수
                     // 문자열 시작 위치에서 문자열 길이만큼만 복사
                     memcpy(json->tokens[tokenIndex].string, begin, stringLength);
 
-                    tokenIndex++;                 // 토큰 인덱스 증가
+                    tokenIndex++; // 토큰 인덱스 증가
                     arrcnt++;
-                    json->tokens[tokenIndex-arrcnt-1].size++;
-                    json->tokens[tokenIndex-arrcnt-1].isArray = 1;
+                    json->tokens[tokenIndex - arrcnt - 1].size++;
+                    json->tokens[tokenIndex - arrcnt - 1].isArray = 1;
+                    json->tokens[tokenIndex - arrcnt - 1].isArraytitle = 1;
                     // printf("%s : %d\n", json->tokens[tokenIndex-arrcnt-1].string, json->tokens[tokenIndex-arrcnt-1].size);
                     pos = pos + stringLength + 1; // 현재 위치 + 문자열 길이 + "(+ 1)
                 }
@@ -213,22 +215,26 @@ void parseJSON(char *doc, int size, JSON *json) // JSON 파싱 함수
             // 문서에서 문자열을 버퍼에 저장
             // 문자열 시작 위치에서 문자열 길이만큼만 복사
             memcpy(buffer, begin, stringLength);
-            printf("buffer test : %s\n", buffer);
-            printf("%d %f", atoi(buffer), atof(buffer));
+            // printf("buffer test : %s\n", buffer);
+            // printf("%d %f", atoi(buffer), atof(buffer));
             // 토큰 종류는 숫자
 
-            for(i = 0; i < strlen(buffer); i++){
-                if (buffer[i] == '.') break;
+            for (i = 0; i < strlen(buffer); i++)
+            {
+                if (buffer[i] == '.')
+                    break;
             }
-            if (i == strlen(buffer)) {
+            if (i == strlen(buffer))
+            {
                 // int
                 json->tokens[tokenIndex].type = TOKEN_INT;
                 json->tokens[tokenIndex].intnum = atoi(buffer);
             }
-            else {
+            else
+            {
                 // float
                 json->tokens[tokenIndex].type = TOKEN_FLOAT;
-                json->tokens[tokenIndex].floatnum = atof(buffer);                
+                json->tokens[tokenIndex].floatnum = atof(buffer);
             }
 
             free(buffer); // 버퍼 해제
@@ -283,52 +289,49 @@ int main()
 
     for (int i = 0; i < totaltokensize; i++)
     {
-
-        if (json.tokens[i].isArray) {
+        if (json.tokens[i].isArraytitle) {
+            // stash array size..
             json.tokens[i].size--;
         }
-        if (json.tokens[i].type == TOKEN_STRING) {
-            printf("type: %d %s\t", json.tokens[i].type, json.tokens[i].string);
+        if (json.tokens[i].isArray)
+        {
+            if (json.tokens[i].size > 0) {
+                // array title
+                printf("%s ", json.tokens[i].string);
+            }
+            else {
+                // array data
+                if (json.tokens[i].type == TOKEN_STRING)
+                {
+                    printf("\t%s ", json.tokens[i].string);
+                }
+                else if (json.tokens[i].type == TOKEN_INT)
+                {
+                    printf("\t%d", json.tokens[i].intnum);
+                }
+                else if (json.tokens[i].type == TOKEN_FLOAT)
+                {
+                    printf("\t%f", json.tokens[i].floatnum);
+                }
+            }
+            printf("(size : %d)\n", json.tokens[i].size);
         }
-        else if (json.tokens[i].type == TOKEN_INT) { 
-            printf("type : %d %d\t", json.tokens[i].type, json.tokens[i].intnum);
+        else
+        {
+            if (json.tokens[i].type == TOKEN_STRING)
+            {
+                printf("%s ", json.tokens[i].string);
+            }
+            else if (json.tokens[i].type == TOKEN_INT)
+            {
+                printf("%d", json.tokens[i].intnum);
+            }
+            else if (json.tokens[i].type == TOKEN_FLOAT)
+            {
+                printf("%f", json.tokens[i].floatnum);
+            }
+            printf("(size : %d)\n", json.tokens[i].size);
         }
-        else if (json.tokens[i].type == TOKEN_FLOAT) {
-            printf("type : %d %f\t", json.tokens[i].type ,json.tokens[i].floatnum);
-        }
-        printf("(is array : %d)", json.tokens[i].isArray);
-        printf("(size : %d)\n", json.tokens[i].size);
-
-        
-            // for (int j = 1; j <= json.tokens[i].size; j++)
-            // {
-            //     // here, there may be string or number
-            //     if (json.tokens[i + j].type == TOKEN_STRING)
-            //     {
-            //         printf("%s\n", json.tokens[i + j].string);
-            //     }
-            //     else if (json.tokens[i + j].type == TOKEN_INT)
-            //     {
-            //         printf("%d\n", json.tokens[i + j].intnum);
-            //     }
-            //     else if (json.tokens[i + j].type == TOKEN_FLOAT)
-            //     {
-            //         printf("%f\n", json.tokens[i + j].floatnum);
-            //     }
-            //     i++;
-            // }
-
-        // string
-        // if (json.tokens[i].type == TOKEN_STRING) {
-        //     printf("%s ", json.tokens[i].string);
-        //     printf("(size : %d) ", json.tokens[i].size);
-        //     if (json.tokens[i].size != 0){
-        //         for (int j = 0 ; j < json.tokens[i].size; j++){
-        //             printf("%s\n", json.tokens[i+1].string);
-        //             i++;
-        //         }
-        //     }
-        // }
     }
     // free json struct
     freeJSON(&json);
