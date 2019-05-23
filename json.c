@@ -23,13 +23,13 @@ typedef enum _TOKEN_TYPE
 // 토큰 구조체
 typedef struct _TOKEN
 {
-    TOKEN_TYPE type;    // 토큰 종류
-    union {             // 두 종류 중 한 종류만 저장할 것이므로 공용체로 만듦
-        char *string;   // 문자열 포인터
-        float floatnum; // 실수형 숫자
+    TOKEN_TYPE type;
+    struct {
+        char *string;
+        float floatnum;
         int intnum;
     };
-    bool isArray; // 현재 토큰이 배열인지 표시
+    bool isArray;
     bool isArraytitle;
     int size;
     /*
@@ -137,7 +137,6 @@ void parseJSON(char *doc, int size, JSON *json) // JSON 파싱 함수
             int arrcnt = 0;
             while (doc[pos] != ']') // 닫는 ]가 나오면 반복 종료
             {
-
                 // 여기서는 문자열 배열만 처리
                 if (doc[pos] == '"') // 문자가 "이면 문자열
                 {
@@ -273,7 +272,7 @@ int main()
 
     // assign file content to one big string named doc
     // get size of file
-    char *doc = readFile("example3.json", &size);
+    char *doc = readFile("example2.json", &size);
     if (doc == NULL)
         return -1;
 
