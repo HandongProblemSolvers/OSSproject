@@ -27,6 +27,7 @@ typedef struct _TOKEN
         double number; // 실수형 숫자
     };
     bool isArray; // 현재 토큰이 배열인지 표시
+    int size;
     /*
     int start;
     int end;
@@ -118,13 +119,19 @@ void parseJSON(char *doc, int size, JSON *json) // JSON 파싱 함수
             memcpy(json->tokens[tokenIndex].string, begin, stringLength);
 
             tokenIndex++; // 토큰 인덱스 증가
-
+            // printf("test log 1 %c\n", doc[pos]);
             pos = pos + stringLength + 1; // 현재 위치 + 문자열 길이 + "(+ 1)
+            // printf("test log 2 %c\n", doc[pos]);
         }
-        break;
+        // break;
         }
 
         pos++; // 다음 문자로
+        if (doc[pos] == ':') {
+            json->tokens[--tokenIndex].size++;
+            tokenIndex++;
+        }
+        // printf("test log 3: %c\n", doc[pos]);
     }
 }
 
@@ -153,9 +160,18 @@ int main()
     // parse doc (which is same as input json file)
     parseJSON(doc, size, &json);
 
-    printf("Title: %s\n", json.tokens[1].string);    // 토큰에 저장된 문자열 출력(Title)
-    printf("Genre: %s\n", json.tokens[3].string);    // 토큰에 저장된 문자열 출력(Genre)
-    printf("Director: %s\n", json.tokens[5].string); // 토큰에 저장된 문자열 출력(Director)
+    for (int i = 0; i < 6; i++){
+        printf("%s\n", json.tokens[i].string);
+        printf("size : %d\n", json.tokens[i].size);
+        /*
+            for (int j = 0 ; j < json.tokens[j].size; j++){
+                printf(": %s\n", json.tokens[i+j].string);
+            }
+        */
+    }
+    // printf("%s\n", json.tokens[1].string);    // 토큰에 저장된 문자열 출력(Title)
+    // printf("%s\n", json.tokens[3].string);    // 토큰에 저장된 문자열 출력(Genre)
+    // printf("%s\n", json.tokens[5].string); // 토큰에 저장된 문자열 출력(Director)
 
     // free json struct
     freeJSON(&json);
