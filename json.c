@@ -119,9 +119,8 @@ void parseJSON(char *doc, int size, JSON *json) // JSON 파싱 함수
             memcpy(json->tokens[tokenIndex].string, begin, stringLength);
 
             tokenIndex++; // 토큰 인덱스 증가
-            // printf("test log 1 %c\n", doc[pos]);
             pos = pos + stringLength + 1; // 현재 위치 + 문자열 길이 + "(+ 1)
-            // printf("test log 2 %c\n", doc[pos]);
+;
         }
         // break;
         }
@@ -131,7 +130,7 @@ void parseJSON(char *doc, int size, JSON *json) // JSON 파싱 함수
             json->tokens[--tokenIndex].size++;
             tokenIndex++;
         }
-        // printf("test log 3: %c\n", doc[pos]);
+
     }
 }
 
@@ -161,13 +160,13 @@ int main()
     parseJSON(doc, size, &json);
 
     for (int i = 0; i < 6; i++){
-        printf("%s\n", json.tokens[i].string);
-        printf("size : %d\n", json.tokens[i].size);
-        /*
-            for (int j = 0 ; j < json.tokens[j].size; j++){
-                printf(": %s\n", json.tokens[i+j].string);
+        printf("%s", json.tokens[i].string);
+        // printf("size : %d\n", json.tokens[i].size);
+        if (json.tokens[i].size != 0){
+            for (int j = 0 ; j < json.tokens[i].size; j++){
+                printf(": %s\n", json.tokens[i+1].string);
             }
-        */
+        }
     }
     // printf("%s\n", json.tokens[1].string);    // 토큰에 저장된 문자열 출력(Title)
     // printf("%s\n", json.tokens[3].string);    // 토큰에 저장된 문자열 출력(Genre)
