@@ -318,6 +318,7 @@ int main()
         }
         else
         {
+            // not array, pairs
             if (json.tokens[i].type == TOKEN_STRING)
             {
                 printf("%s ", json.tokens[i].string);
