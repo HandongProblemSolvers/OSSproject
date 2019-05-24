@@ -6,7 +6,7 @@
 char * readfile(char * , int * );
 void startParse(int );
 int parseString(int );
-// int parseArray(int );
+int parseArray(int );
 int parseObject(int );
 
 typedef enum {
@@ -74,7 +74,7 @@ void startParse(int filesize) {
             }
             case '[' : {
                 // parse array
-                // pos = parseArray(pos);
+                pos = parseArray(pos);
                 break;
             }
             case ':' : {
@@ -119,23 +119,43 @@ int parseString(int pos) {
     totaltokensize++;
     return pos;
 }
-// int parseArray(int pos) {
-//     pos++;
-//     while(file[pos] != ']') {
-//         switch(file[pos]) {
-//             case '"' : {
-//                 pos = parseString(pos);
-//                 break;
-//             }
-//             case '{' : {
-//                 pos = parseObject(pos);
-//                 break;
-//             }
-//         }
-//         pos++;
-//     }
-//     return pos;
-// }
+
+int parseArray(int pos) {
+    int initpos = pos;
+    int endpos = 0;
+    int cnt = 0;
+    pos++;
+    tokens[tokenidx].size = 1;
+    while(1) {
+        if( (file[pos] == ']') && (cnt == 0) ) break; 
+        if(file[pos] == '[') cnt++;
+        if(file[pos] == ']') cnt--;
+        if(file[pos] == ',') tokens[tokenidx].size++;
+        pos++;
+    }
+    tokens[tokenidx].type = ARRAY;
+    tokens[tokenidx].start = initpos;
+    tokens[tokenidx].end = pos + 1;
+    tokenidx++;
+    totaltokensize++;
+    return initpos + 1;
+    // pos++;
+    // while(file[pos] != ']') {
+    //     switch(file[pos]) {
+    //         case '"' : {
+    //             pos = parseString(pos);
+    //             break;
+    //         }
+    //         case '{' : {
+    //             pos = parseObject(pos);
+    //             break;
+    //         }
+    //     }
+    //     pos++;
+    // }
+    // return pos;
+}
+
 char * readfile(char * filename, int * filesize) {
     FILE * fp = fopen(filename, "r");
     if (fp == NULL) return NULL;
