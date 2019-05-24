@@ -88,33 +88,23 @@ void startParse(int filesize) {
 
 int parseObject(int pos) {
     int initpos = pos;
+    int endpos = 0;
+    int cnt = 0;
     pos++;
-    while(file[pos] != '}') {
-
-        if(file[pos] == '{') {
-            tokenidx++;
-            pos = parseObject(pos);
-            tokenidx--;
-        }
-
-        if(file[pos] == ',') {
-            tokens[tokenidx].size++;
-        }
-
-        // if(file[pos] == '"') {
-        //     pos = parseString(pos);
-        // }
-
+    tokens[tokenidx].size = 1;
+    while(1) {
+        if( (file[pos] == '}') && (cnt == 0) ) break; 
+        if(file[pos] == '{') cnt++;
+        if(file[pos] == '}') cnt--;
+        if(file[pos] == ',') tokens[tokenidx].size++;
         pos++;
     }
-
-    pos++;  // object include }
-    tokens[tokenidx].start = initpos;
     tokens[tokenidx].type = OBJECT;
-    tokens[tokenidx].end = pos;
-    // tokenidx++;
+    tokens[tokenidx].start = initpos;
+    tokens[tokenidx].end = pos + 1;
+    tokenidx++;
     totaltokensize++;
-    return pos;
+    return initpos + 1;
 }
 
 int parseString(int pos) {
