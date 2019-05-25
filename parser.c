@@ -9,6 +9,7 @@ int parseString(int );
 int parseArray(int );
 int parseObject(int );
 int parseNumber(int );
+void parseBoolean(int );
 
 typedef enum {
     UNDEFINED = 0,
@@ -57,7 +58,8 @@ int main (int argc, char* argv[]) {
 void startParse(int filesize) {
     int i = 0;
     int pos = 0;
-
+    int temppos = 0;
+    char * checkbool;
     if (file[pos] != '{') return ;
     pos++;
     while(pos < filesize){
@@ -78,11 +80,39 @@ void startParse(int filesize) {
                 pos = parseArray(pos);
                 break;
             }
+            case 't' : case 'f' : case 'n' : {
+                // parse boolean and null
+                temppos = pos;
+                if (file[pos] == 't' || file[pos] == 'n') {
+                    // true, null
+                    checkbool = malloc(5);
+                    strncpy(checkbool, file+pos, 4);
+                    printf("test bool : %s\n", checkbool);
+                    if( (strcmp(checkbool, "true") == 0) || (strcmp(checkbool, "null") == 0) ) {
+                        printf("it's true || null\n");
+                        parseBoolean(pos);
+                    }
+                    else break;
+                    free(checkbool);
+                } else {
+                    // false
+                    checkbool = malloc(6);
+                    strncpy(checkbool, file+pos, 5);
+                    printf("test bool : %s\n", checkbool);
+                    if( strcmp(checkbool, "false") == 0 ) {
+                        printf("it's false\n");
+                        parseBoolean(pos);
+                    }
+                    else break;
+                    free(checkbool);
+                }
+                break;
+            }
             case '0': case '1': case '2': case '3': case '4':
             case '5': case '6': case '7': case '8': case '9': 
             case '-': {
                 // parse numbers
-                pos = parseNumber(pos);
+                parseNumber(pos);
                 break;
             }
             case ':' : {
@@ -94,6 +124,10 @@ void startParse(int filesize) {
         pos++;
     }   // end of for loop
 }
+void parseBoolean(int pos) {
+    printf("parseBoolean\n");
+}
+
 int parseNumber(int pos) {
     tokens[tokenidx].type = PRIMITIVE;
     tokens[tokenidx].start = pos;

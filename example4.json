@@ -2,7 +2,7 @@
     "clients": [
       {
         "id": "59761c23b30d971669fb42ff",
-        "isActive": "true",
+        "isActive": true,
         "age": 36,
         "name": "Dunlap Hubbard",
         "gender": "male",
@@ -13,7 +13,7 @@
       },
       {
         "id": "59761c233d8d0f92a6b0570d",
-        "isActive": "true",
+        "isActive": null,
         "age": 24,
         "name": "Kirsten Sellers",
         "gender": "female",
@@ -24,7 +24,7 @@
       },
       {
         "id": "59761c23fcb6254b1a06dad5",
-        "isActive": "true",
+        "isActive": false,
         "age": 30,
         "name": "Acosta Robbins",
         "gender": "male",
