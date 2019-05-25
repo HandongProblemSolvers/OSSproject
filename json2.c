@@ -8,13 +8,14 @@ void startParse(int );
 int parseString(int );
 int parseArray(int );
 int parseObject(int );
+int parseNumber(int );
 
 typedef enum {
-    UNDEFINED,
-    OBJECT,
-    ARRAY,
-    STRING,
-    PRIMITIVE
+    UNDEFINED = 0,
+    OBJECT = 1,
+    ARRAY = 2,
+    STRING = 3,
+    PRIMITIVE = 4
 } token_t;
 
 typedef struct {
@@ -77,13 +78,32 @@ void startParse(int filesize) {
                 pos = parseArray(pos);
                 break;
             }
+            case '0': case '1': case '2': case '3': case '4':
+            case '5': case '6': case '7': case '8': case '9': 
+            case '-': {
+                // parse numbers
+                pos = parseNumber(pos);
+                break;
+            }
             case ':' : {
                 tokens[--tokenidx].size++;
                 tokenidx++;
+                break;
             }
         }   // end of switch
         pos++;
     }   // end of for loop
+}
+int parseNumber(int pos) {
+    tokens[tokenidx].type = PRIMITIVE;
+    tokens[tokenidx].start = pos;
+    while(file[pos] != ','){
+        pos++;
+    }
+    tokens[tokenidx].end = pos;
+    tokenidx++;
+    totaltokensize++;
+    return pos;
 }
 
 int parseObject(int pos) {
@@ -139,21 +159,6 @@ int parseArray(int pos) {
     tokenidx++;
     totaltokensize++;
     return initpos + 1;
-    // pos++;
-    // while(file[pos] != ']') {
-    //     switch(file[pos]) {
-    //         case '"' : {
-    //             pos = parseString(pos);
-    //             break;
-    //         }
-    //         case '{' : {
-    //             pos = parseObject(pos);
-    //             break;
-    //         }
-    //     }
-    //     pos++;
-    // }
-    // return pos;
 }
 
 char * readfile(char * filename, int * filesize) {
