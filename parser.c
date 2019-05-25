@@ -9,7 +9,6 @@ int parseString(int );
 int parseArray(int );
 int parseObject(int );
 int parseNumber(int );
-void parseBoolean(int );
 
 typedef enum {
     UNDEFINED = 0,
@@ -87,10 +86,8 @@ void startParse(int filesize) {
                     // true, null
                     checkbool = malloc(5);
                     strncpy(checkbool, file+pos, 4);
-                    printf("test bool : %s\n", checkbool);
                     if( (strcmp(checkbool, "true") == 0) || (strcmp(checkbool, "null") == 0) ) {
-                        printf("it's true || null\n");
-                        parseBoolean(pos);
+                        pos = parsePrimitive(pos);
                     }
                     else break;
                     free(checkbool);
@@ -98,10 +95,8 @@ void startParse(int filesize) {
                     // false
                     checkbool = malloc(6);
                     strncpy(checkbool, file+pos, 5);
-                    printf("test bool : %s\n", checkbool);
                     if( strcmp(checkbool, "false") == 0 ) {
-                        printf("it's false\n");
-                        parseBoolean(pos);
+                        pos = parsePrimitive(pos);
                     }
                     else break;
                     free(checkbool);
@@ -124,11 +119,8 @@ void startParse(int filesize) {
         pos++;
     }   // end of for loop
 }
-void parseBoolean(int pos) {
-    printf("parseBoolean\n");
-}
 
-int parseNumber(int pos) {
+int parsePrimitive(int pos) {
     tokens[tokenidx].type = PRIMITIVE;
     tokens[tokenidx].start = pos;
     while(file[pos] != ','){
