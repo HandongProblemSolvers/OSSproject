@@ -8,7 +8,7 @@ void startParse(int );
 int parseString(int );
 int parseArray(int );
 int parseObject(int );
-int parseNumber(int );
+int parsePrimitive(int );
 
 typedef enum {
     UNDEFINED = 0,
@@ -107,7 +107,7 @@ void startParse(int filesize) {
             case '5': case '6': case '7': case '8': case '9': 
             case '-': {
                 // parse numbers
-                parseNumber(pos);
+                pos = parsePrimitive(pos);
                 break;
             }
             case ':' : {
@@ -136,13 +136,22 @@ int parseObject(int pos) {
     int initpos = pos;
     int endpos = 0;
     int cnt = 0;
+    int flag = 0;
     pos++;
     tokens[tokenidx].size = 1;
     while(1) {
         if( (file[pos] == '}') && (cnt == 0) ) break; 
-        if(file[pos] == '{') cnt++;
-        if(file[pos] == '}') cnt--;
-        if(file[pos] == ',') tokens[tokenidx].size++;
+        if(file[pos] == '{') {
+            cnt++;
+            flag = 1;
+        }
+        if(file[pos] == '}') {
+            cnt--;
+            flag = 0;
+        }
+        if( (file[pos] == ',') && (flag == 0) ) {
+            tokens[tokenidx].size++;
+        }
         pos++;
     }
     tokens[tokenidx].type = OBJECT;
@@ -170,14 +179,22 @@ int parseArray(int pos) {
     int initpos = pos;
     int endpos = 0;
     int cnt = 0;
+    int flag = 0;
     pos++;
     tokens[tokenidx].size = 1;
     while(1) {
         if( (file[pos] == ']') && (cnt == 0) ) break; 
-        if(file[pos] == '[') cnt++;
-        if(file[pos] == ']') cnt--;
-        // need to think about nested array/object size
-        if(file[pos] == ',') tokens[tokenidx].size++;
+        if( (file[pos] == '[') || (file[pos] == '{') )  {
+            cnt++;
+            flag = 1;
+        }
+        if( (file[pos] == ']') || (file[pos] == '}') ) {
+            cnt--;
+            flag = 0;
+        }
+        if( (file[pos] == ',') && (flag == 0) ) {
+            tokens[tokenidx].size++;
+        }
         pos++;
     }
     tokens[tokenidx].type = ARRAY;
