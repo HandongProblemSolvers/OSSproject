@@ -141,11 +141,11 @@ int parseObject(int pos) {
     tokens[tokenidx].size = 1;
     while(1) {
         if( (file[pos] == '}') && (cnt == 0) ) break; 
-        if(file[pos] == '{') {
+        if( (file[pos] == '{') || (file[pos] == '[') )  {
             cnt++;
             flag = 1;
         }
-        if(file[pos] == '}') {
+        if( (file[pos] == '{') || (file[pos] == ']') ) {
             cnt--;
             flag = 0;
         }
