@@ -1,0 +1,227 @@
+{
+    "clients": [
+      {
+        "id": "59761c233d8d0f92a6b04832",
+        "age": 35,
+        "name": "Mohammad Love",
+        "gender": "male",
+        "company": "HWAWEI",
+        "email": "employerofthemont@hwawei.com",
+        "phone": "+1 (880) 232-3323",
+        "hobby": "Cyclcling",
+        "address": "169 Wall Street, Newton, Northern Korea Town, 1232"
+      },
+      {
+        "id": "597123kdj3d8d0f92a6b05702",
+        "age": 24,
+        "name": "Christina Lee",
+        "gender": "female",
+        "company": "ENTERTAINMENT",
+        "email": "hoooLee@enter.com",
+        "phone": "+1 (849) 240-1928",
+        "hobby": "Climing",
+        "address": "828 Crystal Plalace, FarFar, Maine, 3889"
+      },
+      {
+        "id": "59161c43fdb6254d1a06da03",
+        "age": 29,
+        "name": "Robin Hood",
+        "gender": "male",
+        "company": "POLICE",
+        "email": "stealfromrich@police.org",
+        "phone": "+1 (832) 483-3127",
+        "hobby": "Sports",
+        "address": "983 Linden Boulevard, Eastside, NY, 1035"
+      },
+      {
+        "id": "59761c23fcb6254b1dfg306d123",
+        "age": 32,
+        "name": "Snow White",
+        "gender": "female",
+        "company": "DISNEY LAND",
+        "email": "no1princess@disney.com",
+        "phone": "+1 (231) 343-2034",
+        "hobby": "Music",
+        "address": "225 FarFarAway Wood, Deep, 2039"
+      },
+      {
+        "id": "59761c23fcb623847a06da05",
+        "age": 29,
+        "name": "Christian Kim",
+        "gender": "male",
+        "company": "CHURCH",
+        "email": "faith@ourchurch.com",
+        "phone": "+1 (432) 123-4932",
+        "hobby": "Reading Book",
+        "address": "225 Boolean Island, Zero, 11001"
+      },
+      {
+        "id": "59761c23fcb6254b1a0123jkd",
+        "age": 23,
+        "name": "Mary Sanchez",
+        "gender": "male",
+        "company": "DUO",
+        "email": "marynotmarry@duo.com",
+        "phone": "+1 (123) 423-5984",
+        "hobby": "Drama",
+        "address": "152 KingJames Street, Handogro, 558"
+      },
+      {
+        "id": "59761c23fcb12344b1a06da07",
+        "age": 40,
+        "name": "Barry RichGuy",
+        "gender": "male",
+        "company": "GOOGLE",
+        "email": "easymoney@gmail.com",
+        "phone": "+1 (284) 219-3928",
+        "hobby": "Shopping",
+        "address": "231 Beverly Hills, OMG, 2093"
+      },
+      {
+        "id": "59761c23fskdjfi254b1a06da08",
+        "age": 27,
+        "name": "Elizabeth Choi",
+        "gender": "female",
+        "company": "LG",
+        "email": "queenchoi@lifeisgood.com",
+        "phone": "+82 (231) 153-8323",
+        "hobby": "Music",
+        "address": "357 Catch Me, Ifyoucan, 4213"
+      },
+      {
+        "id": "51231c23fcb6254b1a06da09",
+        "age": 25,
+        "name": "Clone Giit",
+        "gender": "female",
+        "company": "GITHUB",
+        "email": "branchme@gmail.com",
+        "phone": "+1 (883) 129-3932",
+        "hobby": "Reading Book",
+        "address": "735 Narnia Place, Bukgu, 442"
+      },
+      {
+        "id": "59761c23fcb6254b1123a23",
+        "age": 28,
+        "name": "Giwoo Han",
+        "gender": "male",
+        "company": "NINTENDO",
+        "email": "letsgopikachu@nintendo.com",
+        "phone": "+1 (421) 231-1421",
+        "hobby": "Travel",
+        "address": "163 Taecho Maeul, PokeVill, 111"
+      },
+      {
+        "id": "59761c23b30d971669fb4201",
+        "age": 29,
+        "name": "Dunlap Hubbard",
+        "gender": "male",
+        "company": "CEDWARD",
+        "email": "dunlaphubbard@cedward.com",
+        "phone": "+1 (890) 543-2508",
+        "hobby": "Sports",
+        "address": "169 Rutledge Street, Konterra, Northern Mariana Islands, 8551"
+      },
+      {
+        "id": "59761c233d8d0f92a6b05702",
+        "age": 24,
+        "name": "Kirsten Sellers",
+        "gender": "female",
+        "company": "EMERGENT",
+        "email": "kirstensellers@emergent.com",
+        "phone": "+1 (831) 564-2190",
+        "hobby": "Game",
+        "address": "886 Gallatin Place, Fannett, Arkansas, 4656"
+      },
+      {
+        "id": "59761c23fcb6254b1a06da03",
+        "age": 28,
+        "name": "Acosta Robbins",
+        "gender": "male",
+        "company": "ORGANICA",
+        "email": "acostarobbins@organica.com",
+        "phone": "+1 (882) 441-3367",
+        "hobby": "Sports",
+        "address": "697 Linden Boulevard, Sattley, Idaho, 1035"
+      },
+      {
+        "id": "59761c23fcb6254b1a06da04",
+        "age": 28,
+        "name": "Corinne Alene",
+        "gender": "female",
+        "company": "SAMSUNG",
+        "email": "Corinne@gmail.com",
+        "phone": "+1 (881) 152-1525",
+        "hobby": "Reading Book",
+        "address": "225 OldTrafford Liverpool, gerrad, 199"
+      },
+      {
+        "id": "59761c23fcb6254b1a06da05",
+        "age": 27,
+        "name": "Luna Calleigh",
+        "gender": "female",
+        "company": "SAMSUNG",
+        "email": "Luna@gmail.com",
+        "phone": "+1 (882) 194-8632",
+        "hobby": "Sports",
+        "address": "225 Bruclean sancho, sajikdong, 142"
+      },
+      {
+        "id": "59761c23fcb6254b1a06da06",
+        "age": 25,
+        "name": "Hunter Timmy",
+        "gender": "male",
+        "company": "GOOGLE",
+        "email": "Hunter@gmail.com",
+        "phone": "+1 (882) 733-4312",
+        "hobby": "Game",
+        "address": "152 Bruclean James, sonraegoo, 112"
+      },
+      {
+        "id": "59761c23fcb6254b1a06da07",
+        "age": 29,
+        "name": "Gale Haywood",
+        "gender": "male",
+        "company": "GOOGLE",
+        "email": "Gale@gmail.com",
+        "phone": "+1 (880) 912-6152",
+        "hobby": "Reading Book",
+        "address": "152 Holerand coral, namgoo, 433"
+      },
+      {
+        "id": "59761c23fcb6254b1a06da08",
+        "age": 26,
+        "name": "Kiera Myra",
+        "gender": "female",
+        "company": "HWAWEI",
+        "email": "Myra@gmail.com",
+        "phone": "+1 (881) 152-8383",
+        "hobby": "Music",
+        "address": "357 Holerand coral, namgoo, 433"
+      },
+      {
+        "id": "59761c23fcb6254b1a06da09",
+        "age": 24,
+        "name": "Kamryn Jonelle",
+        "gender": "female",
+        "company": "SK INOVATION",
+        "email": "Kamaryn@gmail.com",
+        "phone": "+1 (883) 999-1111",
+        "hobby": "Sports",
+        "address": "735 neverland express, bookgoo, 442"
+      },
+      {
+        "id": "59761c23fcb6254b1a06da10",
+        "age": 28,
+        "name": "Gaz Newton",
+        "gender": "male",
+        "company": "LG",
+        "email": "Gaz@gmail.com",
+        "phone": "+1 (882) 602-1094",
+        "hobby": "Music",
+        "address": "163 songhae gorgea, daeduckdong, 112"
+      }
+
+
+      
+    ]
+  }
