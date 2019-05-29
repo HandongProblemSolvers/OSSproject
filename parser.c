@@ -45,7 +45,7 @@ int main (int argc, char* argv[]) {
     startParse(filesize);
     
     for(i = 0; i < totaltokensize; i++) {
-        printf("[ %d] ", i+1);
+        printf("[ %d] ", i);
         for(j = tokens[i].start; j < tokens[i].end; j++) {
             printf("%c", file[j]);
         }
@@ -61,7 +61,8 @@ void startParse(int filesize) {
     int temppos = 0;
     char * checkbool;
     if (file[pos] != '{') return ;
-    pos++;
+    printf("filesize : %d\n", filesize);
+    // pos++;
     while(pos < filesize){
         switch(file[pos]) {
             case '{' : {
@@ -116,10 +117,10 @@ void startParse(int filesize) {
                 tokenidx++;
                 break;
             }
-            case ' ': case '\n' : case ']': case '}': case ',' : {
-                // printf("not undefined, but not parsing : %c\n", file[pos]);
-                break;
-            }
+            // case ' ': case '\n' : case ']': case '}': case ',' : {
+            //     printf("not undefined, but not parsing : %c\n", file[pos]);
+            //     break;
+            // }
             // default : {
             //     printf("undefined token : %c\n", file[pos]);
             //     break;
@@ -132,7 +133,7 @@ void startParse(int filesize) {
 int parsePrimitive(int pos) {
     tokens[tokenidx].type = PRIMITIVE;
     tokens[tokenidx].start = pos;
-    while(file[pos] != ','){
+    while( (file[pos] != ',') && (file[pos] != '}') && (file[pos] != ' ') && (file[pos] != '\n')) {
         pos++;
     }
     tokens[tokenidx].end = pos;
@@ -143,7 +144,6 @@ int parsePrimitive(int pos) {
 
 int parseObject(int pos) {
     int initpos = pos;
-    int endpos = 0;
     int cnt = 0;
     int flag = 0;
     pos++;
@@ -152,11 +152,11 @@ int parseObject(int pos) {
         if( (file[pos] == '}') && (cnt == 0) ) break; 
         if( (file[pos] == '{') || (file[pos] == '[') )  {
             cnt++;
-            flag = 1;
+            flag++;
         }
-        if( (file[pos] == '{') || (file[pos] == ']') ) {
+        if( (file[pos] == '}') || (file[pos] == ']') ) {
             cnt--;
-            flag = 0;
+            flag--;
         }
         if( (file[pos] == ',') && (flag == 0) ) {
             tokens[tokenidx].size++;
@@ -186,7 +186,6 @@ int parseString(int pos) {
 
 int parseArray(int pos) {
     int initpos = pos;
-    int endpos = 0;
     int cnt = 0;
     int flag = 0;
     pos++;
@@ -195,11 +194,13 @@ int parseArray(int pos) {
         if( (file[pos] == ']') && (cnt == 0) ) break; 
         if( (file[pos] == '[') || (file[pos] == '{') )  {
             cnt++;
-            flag = 1;
+            // flag = 1;
+            flag++;
         }
         if( (file[pos] == ']') || (file[pos] == '}') ) {
             cnt--;
-            flag = 0;
+            // flag = 0;
+            flag--;
         }
         if( (file[pos] == ',') && (flag == 0) ) {
             tokens[tokenidx].size++;
