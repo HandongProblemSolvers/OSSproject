@@ -23,6 +23,8 @@ void printTokens();
 void randomMatching();
 void seeClient();
 void seeClientbyAge();
+void seeClientbyCommpany();
+void seeClientbyEmail();
 
 typedef enum {
     UNDEFINED = 0,
@@ -73,6 +75,12 @@ int main (int argc, char* argv[]) {
                 break;
             case 3 :
                 seeClientbyAge();
+                break;
+            case 4 :
+                seeClientbyCommpany();
+                break;
+            case 5 :
+                seeClientbyEmail();
                 break;
             case 99 :
                 printf("- SYS END -\n");
@@ -281,6 +289,8 @@ void printMenu(){
     printf("1. Random Matching\n");
     printf("2. See Client Information\n");
     printf("3. See Clients By Age Limit\n"); 
+    printf("4. See Clients By Company\n");
+    printf("5. See Clients By Email\n");
     printf("99. Quit\n"); 
     printf("----------------------------------------------\n");
 }
@@ -367,5 +377,44 @@ void seeClientbyAge(){
         }
     printf("THERE ARE %d PEOPLE\n", cnt);
     printf("----------------------------------------------\n");
+}
+
+void seeClientbyCommpany(){
+    int cnt = 0;
+    char name[128] = {0, };
+    printf("COMPANY : ");
+    scanf("%[^\n]", name);
+    for(int i = 0; i < strlen(name); i++)
+        if(name[i] >= 'a' && name[i] <= 'z')
+            name[i]= name[i] - 32;
+
+    char key[] = "company";
+    printf("--------------- COMPANY : %s --------------\n", name);
+    for(int i = 0; i < totaltokensize; i++) 
+        if(mystrcmp(key, tokens[i].start, tokens[i].end) && tokens[i].size == 1){
+            if(mystrcmp(name, tokens[i+1].start, tokens[i+1].end))
+                printf("%d. %s\n", ++cnt, extractToken(tokens[i-3].start, tokens[i-3].end));
+        }
+    printf("THERE ARE %d PEOPLE\n", cnt);
+    printf("----------------------------------------------\n");
+}
+
+void seeClientbyEmail(){
+    char name[128] = {0, };
+    printf("E-MAIL : ");
+    scanf("%[^\n]", name);
+    char key[] = "email";
+    for(int i = 0; i < totaltokensize; i++) {
+        if(mystrcmp(key, tokens[i].start, tokens[i].end) && tokens[i].size == 1 && mystrcmp(name, tokens[i+1].start, tokens[i+1].end)){
+            printf("------------------- I N F O ------------------\n");
+            for(int j = -8; j <= 6; j+=2)
+                printf("%s : %s\n", extractToken(tokens[i+j].start, tokens[i+j].end), extractToken(tokens[i+j+1].start, tokens[i+j+1].end));
+            printf("----------------------------------------------\n");
+            return;
+        }
+    }
+    printf("*****************\n");
+    printf("** NOT EXISTED **\n");
+    printf("*****************\n");
 }
 
