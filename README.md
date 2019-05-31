@@ -20,6 +20,7 @@
    - complete file read
    - complete json parsing
    - complete 8 available functions for application
+<<<<<<< HEAD
       1. parser
       
          1. 1. 1. readfile
@@ -69,3 +70,14 @@
       8. see clients by company
       
       9. see client information by e-mail
+=======
+      1. print all parsing data
+      2. random matching
+      3. see client information
+      4. see client by genger
+      5. see client by hobby
+      6. see clients by age limit
+      7. see clients by company
+      8. see client information by e-mail
+      9. see client information by Area Code from phone number
+>>>>>>> fab24d807e10f698d95a60fd7824bfee845baf20
