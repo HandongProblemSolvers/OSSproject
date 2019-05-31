@@ -26,6 +26,7 @@ void seeClient();
 void seeClientbyAge();
 void seeClientbyGender();
 void seeClientbyHobby();
+void seeClientbyLocalInfo();
 
 typedef enum {
     UNDEFINED = 0,
@@ -82,6 +83,9 @@ int main (int argc, char* argv[]) {
                 break;
             case 5 :
                 seeClientbyHobby();
+                break;
+            case 6 : 
+                seeClientbyLocalInfo();
                 break;
             case 99 :
                 printf("- SYS END -\n");
@@ -273,6 +277,7 @@ char * readfile(char * filename, int * filesize) {
     buffer = (char *)malloc(size + 1);
     memset(buffer, 0, size + 1);
 
+    // change this fread function's argument into fread(buffer, 1, size, fp) in Windows OS
     if(fread(buffer, size, 1, fp) < 1) {
         *filesize = 0;
         free(buffer);
@@ -290,8 +295,9 @@ void printMenu(){
     printf("1. Random Matching\n");
     printf("2. See Client Information\n");
     printf("3. See Clients By Age Limit\n"); 
-    printf("4. See Clients By Genger \n"); 
-    printf("5. See Clients By hobby\n");
+    printf("4. See Clients By Gender \n"); 
+    printf("5. See Clients By Hobby\n");
+    printf("6. See Clinents By Area Code\n");
     printf("99. Quit\n"); 
     printf("----------------------------------------------\n");
 }
@@ -440,3 +446,24 @@ void seeClientbyHobby(){
 
 }
 
+void seeClientbyLocalInfo(){
+    int cnt =0;
+    int area_code = 0;
+    char key[] ="phone";
+    printf("Area Code: ");
+    scanf("%d",&area_code);
+    printf("---------------- LOCAL NUMBER : %d ------------------\n", area_code);
+    for(int i=0; i<totaltokensize;i++){
+        if(mystrcmp(key, tokens[i].start, tokens[i].end) && tokens[i].size == 1){
+            // printf("%s \n",extractToken(tokens[i+1].start, tokens[i+1].end));
+            // printf("%s \n",extractToken(tokens[i-7].start, tokens[i-7].end));
+            if(atoi(extractToken(tokens[i+1].start+4, tokens[i+1].start+7))==area_code){
+                printf("AREA CODE: %s NAME: %s \n", extractToken(tokens[i+1].start+3,tokens[i+1].start+8),extractToken(tokens[i-7].start, tokens[i-7].end),extractToken(tokens[i+1].start, tokens[i+1].end));
+                cnt ++;
+            }
+        }
+    }
+
+    printf("THERE ARE %d PEOPLE LIVE IN THE GIVEN AREA\n", cnt);
+    printf("----------------------------------------------\n");
+}
