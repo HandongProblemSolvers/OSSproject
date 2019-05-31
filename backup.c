@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
 #include <time.h>
 
 #define MIN(a,b) (((a) < (b)) ? (a) : (b))
@@ -23,6 +24,9 @@ void printTokens();
 void randomMatching();
 void seeClient();
 void seeClientbyAge();
+void seeClientbyGender();
+void seeClientbyHobby();
+void seeClientbyLocalInfo();
 void seeClientbyCommpany();
 void seeClientbyEmail();
 
@@ -77,9 +81,18 @@ int main (int argc, char* argv[]) {
                 seeClientbyAge();
                 break;
             case 4 :
-                seeClientbyCommpany();
+                seeClientbyGender();
                 break;
             case 5 :
+                seeClientbyHobby();
+                break;
+            case 6 : 
+                seeClientbyLocalInfo();
+                break;
+            case 7 :
+                seeClientbyCommpany();
+                break;
+            case 8 :
                 seeClientbyEmail();
                 break;
             case 99 :
@@ -272,6 +285,7 @@ char * readfile(char * filename, int * filesize) {
     buffer = (char *)malloc(size + 1);
     memset(buffer, 0, size + 1);
 
+    // change this fread function's argument into fread(buffer, 1, size, fp) in Windows OS
     if(fread(buffer, size, 1, fp) < 1) {
         *filesize = 0;
         free(buffer);
@@ -289,8 +303,11 @@ void printMenu(){
     printf("1. Random Matching\n");
     printf("2. See Client Information\n");
     printf("3. See Clients By Age Limit\n"); 
-    printf("4. See Clients By Company\n");
-    printf("5. See Clients By Email\n");
+    printf("4. See Clients By Gender \n"); 
+    printf("5. See Clients By Hobby\n");
+    printf("6. See Clinents By Area Code\n");
+    printf("7. See Clients By Company\n");
+    printf("8. See Clients By Email\n");
     printf("99. Quit\n"); 
     printf("----------------------------------------------\n");
 }
@@ -361,6 +378,8 @@ void seeClient(){
     printf("*****************\n");
 }
 
+
+
 void seeClientbyAge(){
     int cnt = 0;
     int age_limit = 0;
@@ -376,6 +395,86 @@ void seeClientbyAge(){
             }
         }
     printf("THERE ARE %d PEOPLE\n", cnt);
+    printf("----------------------------------------------\n");
+}
+
+void seeClientbyGender(){
+    int cnt = 0;
+    char gender[128] = {0,};
+    printf("Gender : ");
+    scanf("%[^\n]", gender);
+    char key[] = "gender";
+
+    for(int i = 0 ; gender[i] ; i++){
+        gender[i] = tolower(gender[i]);
+    }
+    printf("--------------- GENDER : %s --------------\n",gender);
+    for(int i = 0; i < totaltokensize; i++) {
+        if(mystrcmp(key, tokens[i].start, tokens[i].end) && tokens[i].size == 1 && mystrcmp(gender, tokens[i+1].start, tokens[i+1].end)){
+            printf("%s : %s \n", extractToken(tokens[i-1].start, tokens[i-1].end), extractToken(tokens[i+1].start, tokens[i+1].end));
+            cnt++;
+        }
+    }
+
+    printf("\nTHERE ARE %d PEOPLE\n", cnt);
+    printf("----------------------------------------------\n");
+}
+
+void seeClientbyHobby(){
+
+    char key[] = "hobby";
+    char hobby[64][128];
+    int cnt=0;
+    int isCheck=0;
+    for(int i = 0; i < totaltokensize; i++) {
+        isCheck=0;
+        if(mystrcmp(key, tokens[i].start, tokens[i].end) && tokens[i].size == 1){
+            for(int j = 0 ;j<cnt; j++){
+               // printf("%s : %s \n",hobby[j],extractToken(tokens[i+1].start, tokens[i+1].end));
+                if(strcmp(extractToken(tokens[i+1].start, tokens[i+1].end),hobby[j])==0){
+                    isCheck=1;
+                    break;
+                }
+            }
+            if(isCheck==1) continue;
+            strcpy(hobby[cnt++], extractToken(tokens[i+1].start, tokens[i+1].end));
+            
+        }
+    }
+   
+    
+    printf("\n");
+    for(int i = 0 ; i<cnt ; i++){
+        printf("--------------- HOBBY : %s -------------\n",hobby[i]);
+        for(int j = 0; j < totaltokensize; j++) {
+            if(mystrcmp(key, tokens[j].start, tokens[j].end) && tokens[j].size == 1 && mystrcmp(hobby[i],tokens[j+1].start, tokens[j+1].end)){
+                printf("%s : %s \n", extractToken(tokens[j-9].start, tokens[j-9].end),extractToken(tokens[j-7].start, tokens[j-7].end));
+                }
+         }
+    }
+    printf("\n");
+
+}
+
+void seeClientbyLocalInfo(){
+    int cnt =0;
+    int area_code = 0;
+    char key[] ="phone";
+    printf("Area Code: ");
+    scanf("%d",&area_code);
+    printf("---------------- LOCAL NUMBER : %d ------------------\n", area_code);
+    for(int i=0; i<totaltokensize;i++){
+        if(mystrcmp(key, tokens[i].start, tokens[i].end) && tokens[i].size == 1){
+            // printf("%s \n",extractToken(tokens[i+1].start, tokens[i+1].end));
+            // printf("%s \n",extractToken(tokens[i-7].start, tokens[i-7].end));
+            if(atoi(extractToken(tokens[i+1].start+4, tokens[i+1].start+7))==area_code){
+                printf("AREA CODE: %s NAME: %s \n", extractToken(tokens[i+1].start+3,tokens[i+1].start+8),extractToken(tokens[i-7].start, tokens[i-7].end),extractToken(tokens[i+1].start, tokens[i+1].end));
+                cnt ++;
+            }
+        }
+    }
+
+    printf("THERE ARE %d PEOPLE LIVE IN THE GIVEN AREA\n", cnt);
     printf("----------------------------------------------\n");
 }
 
@@ -417,4 +516,3 @@ void seeClientbyEmail(){
     printf("** NOT EXISTED **\n");
     printf("*****************\n");
 }
-
