@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
 #include <time.h>
 
 #define MIN(a,b) (((a) < (b)) ? (a) : (b))
@@ -23,8 +24,8 @@ void printTokens();
 void randomMatching();
 void seeClient();
 void seeClientbyAge();
-void seeClientbyCommpany();
-void seeClientbyEmail();
+void seeClientbyGender();
+void seeClientbyHobby();
 
 typedef enum {
     UNDEFINED = 0,
@@ -77,10 +78,10 @@ int main (int argc, char* argv[]) {
                 seeClientbyAge();
                 break;
             case 4 :
-                seeClientbyCommpany();
+                seeClientbyGender();
                 break;
             case 5 :
-                seeClientbyEmail();
+                seeClientbyHobby();
                 break;
             case 99 :
                 printf("- SYS END -\n");
@@ -289,8 +290,8 @@ void printMenu(){
     printf("1. Random Matching\n");
     printf("2. See Client Information\n");
     printf("3. See Clients By Age Limit\n"); 
-    printf("4. See Clients By Company\n");
-    printf("5. See Clients By Email\n");
+    printf("4. See Clients By Genger \n"); 
+    printf("5. See Clients By hobby\n");
     printf("99. Quit\n"); 
     printf("----------------------------------------------\n");
 }
@@ -361,6 +362,8 @@ void seeClient(){
     printf("*****************\n");
 }
 
+
+
 void seeClientbyAge(){
     int cnt = 0;
     int age_limit = 0;
@@ -379,42 +382,61 @@ void seeClientbyAge(){
     printf("----------------------------------------------\n");
 }
 
-void seeClientbyCommpany(){
+void seeClientbyGender(){
     int cnt = 0;
-    char name[128] = {0, };
-    printf("COMPANY : ");
-    scanf("%[^\n]", name);
-    for(int i = 0; i < strlen(name); i++)
-        if(name[i] >= 'a' && name[i] <= 'z')
-            name[i]= name[i] - 32;
+    char gender[128] = {0,};
+    printf("Gender : ");
+    scanf("%[^\n]", gender);
+    char key[] = "gender";
 
-    char key[] = "company";
-    printf("--------------- COMPANY : %s --------------\n", name);
-    for(int i = 0; i < totaltokensize; i++) 
-        if(mystrcmp(key, tokens[i].start, tokens[i].end) && tokens[i].size == 1){
-            if(mystrcmp(name, tokens[i+1].start, tokens[i+1].end))
-                printf("%d. %s\n", ++cnt, extractToken(tokens[i-3].start, tokens[i-3].end));
+    for(int i = 0 ; gender[i] ; i++){
+        gender[i] = tolower(gender[i]);
+    }
+    printf("--------------- GENDER : %s --------------\n",gender);
+    for(int i = 0; i < totaltokensize; i++) {
+        if(mystrcmp(key, tokens[i].start, tokens[i].end) && tokens[i].size == 1 && mystrcmp(gender, tokens[i+1].start, tokens[i+1].end)){
+            printf("%s : %s \n", extractToken(tokens[i-1].start, tokens[i-1].end), extractToken(tokens[i+1].start, tokens[i+1].end));
+            cnt++;
         }
-    printf("THERE ARE %d PEOPLE\n", cnt);
+    }
+
+    printf("\nTHERE ARE %d PEOPLE\n", cnt);
     printf("----------------------------------------------\n");
 }
 
-void seeClientbyEmail(){
-    char name[128] = {0, };
-    printf("E-MAIL : ");
-    scanf("%[^\n]", name);
-    char key[] = "email";
+void seeClientbyHobby(){
+
+    char key[] = "hobby";
+    char hobby[64][128];
+    int cnt=0;
+    int isCheck=0;
     for(int i = 0; i < totaltokensize; i++) {
-        if(mystrcmp(key, tokens[i].start, tokens[i].end) && tokens[i].size == 1 && mystrcmp(name, tokens[i+1].start, tokens[i+1].end)){
-            printf("------------------- I N F O ------------------\n");
-            for(int j = -8; j <= 6; j+=2)
-                printf("%s : %s\n", extractToken(tokens[i+j].start, tokens[i+j].end), extractToken(tokens[i+j+1].start, tokens[i+j+1].end));
-            printf("----------------------------------------------\n");
-            return;
+        isCheck=0;
+        if(mystrcmp(key, tokens[i].start, tokens[i].end) && tokens[i].size == 1){
+            for(int j = 0 ;j<cnt; j++){
+               // printf("%s : %s \n",hobby[j],extractToken(tokens[i+1].start, tokens[i+1].end));
+                if(strcmp(extractToken(tokens[i+1].start, tokens[i+1].end),hobby[j])==0){
+                    isCheck=1;
+                    break;
+                }
+            }
+            if(isCheck==1) continue;
+            strcpy(hobby[cnt++], extractToken(tokens[i+1].start, tokens[i+1].end));
+            
         }
     }
-    printf("*****************\n");
-    printf("** NOT EXISTED **\n");
-    printf("*****************\n");
+   
+    
+    printf("\n");
+    for(int i = 0 ; i<cnt ; i++){
+        printf("--------------- HOBBY : %s -------------\n",hobby[i]);
+        for(int j = 0; j < totaltokensize; j++) {
+            if(mystrcmp(key, tokens[j].start, tokens[j].end) && tokens[j].size == 1 && mystrcmp(hobby[i],tokens[j+1].start, tokens[j+1].end)){
+                printf("%s : %s \n", extractToken(tokens[j-9].start, tokens[j-9].end),extractToken(tokens[j-7].start, tokens[j-7].end));
+                }
+         }
+    }
+    printf("\n");
+
 }
 
