@@ -19,10 +19,12 @@
 
    - complete file read
    - complete json parsing
-   - complete 6 available functions for application
+   - complete 8 available functions for application
       1. print all parsing data
       2. random matching
       3. see client information
-      4. see clients by age limit
-      5. see clients by company
-      6. see client information by e-mail
+      4. see client by genger
+      5. see client by hobby
+      6. see clients by age limit
+      7. see clients by company
+      8. see client information by e-mail
