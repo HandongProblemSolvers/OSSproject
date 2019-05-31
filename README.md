@@ -19,12 +19,12 @@
 
    - complete file read
    - complete json parsing
-      1. parser
+      1. parser   
              - readfile  
                   - when user gives argument to main as argv, readfile will read all the character and store it as one big chunk of string.  
 	      - startParse  
                   - this contains all the scenarios that can come in json file.  
-                  - while traversing from top to bottom of the file, startParse function will call various functions for each cases. 
+                  - while traversing from top to bottom of the file, startParse function will call various functions for each cases.   
 	      - parseString  
                   - all string data type in json file starts and ends with '"' charater. Therefore, when the pointing variable encounters '"' charcater, parseString function will be called.  
                   - it will increase position until next '"' character shows up which indicates the end of string.  
