@@ -28,3 +28,4 @@
       6. see clients by age limit
       7. see clients by company
       8. see client information by e-mail
+      9. see client information by Area Code from phone number
