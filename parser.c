@@ -124,7 +124,7 @@ void startParse(int filesize) {
 int parsePrimitive(int pos) {
     tokens[tokenidx].type = PRIMITIVE;
     tokens[tokenidx].start = pos;
-    while( (file[pos] != ',') && (file[pos] != '}') && (file[pos] != ' ') && (file[pos] != '\n')) {
+    while( (file[pos] != ']') && (file[pos] != ',') && (file[pos] != '}') && (file[pos] != ' ') && (file[pos] != '\n')) {
         pos++;
     }
     tokens[tokenidx].end = pos;
@@ -185,12 +185,10 @@ int parseArray(int pos) {
         if( (file[pos] == ']') && (cnt == 0) ) break; 
         if( (file[pos] == '[') || (file[pos] == '{') )  {
             cnt++;
-            // flag = 1;
             flag++;
         }
         if( (file[pos] == ']') || (file[pos] == '}') ) {
             cnt--;
-            // flag = 0;
             flag--;
         }
         if( (file[pos] == ',') && (flag == 0) ) {
