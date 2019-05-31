@@ -9,7 +9,6 @@ int parseString(int );
 int parseArray(int );
 int parseObject(int );
 int parsePrimitive(int );
-int parseUndefined(int );
 
 typedef enum {
     UNDEFINED = 0,
@@ -117,14 +116,6 @@ void startParse(int filesize) {
                 tokenidx++;
                 break;
             }
-            // case ' ': case '\n' : case ']': case '}': case ',' : {
-            //     printf("not undefined, but not parsing : %c\n", file[pos]);
-            //     break;
-            // }
-            // default : {
-            //     printf("undefined token : %c\n", file[pos]);
-            //     break;
-            // }
         }   // end of switch
         pos++;
     }   // end of for loop
