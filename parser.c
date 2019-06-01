@@ -3,6 +3,11 @@
 #include <stdbool.h>
 #include <string.h>
 
+#define WINDOW
+#ifdef WINDOW
+#define FREAD(x, y, z, a) fread(x, z, y, a)
+#endif
+
 char * readfile(char * , int * );
 void startParse(int );
 int parseString(int );
@@ -34,7 +39,6 @@ int main (int argc, char* argv[]) {
     int filesize = 0;
     int i = 0;
     int j = 0;
-
     printf("filename : %s\n", argv[1]);
     char * filename = argv[1];
     
@@ -217,7 +221,7 @@ char * readfile(char * filename, int * filesize) {
     buffer = malloc(size + 1);
     memset(buffer, 0, size + 1);
 
-    if(fread(buffer, size, 1, fp) < 1) {
+    if(FREAD(buffer, size, 1, fp) < 1) {
         *filesize = 0;
         free(buffer);
         fclose(fp);
