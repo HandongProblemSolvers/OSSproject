@@ -33,6 +33,13 @@ void seeClientbyHobby();
 void seeClientbyLocalInfo();
 void seeClientbyCommpany();
 void seeClientbyEmail();
+void printNewWindow();
+void printClientMenu();
+void randomMatchClientVer();
+void showClientAge();
+void showClientCompany();
+void showClientEmail();
+void showClientPhoneNum();
 
 typedef enum {
     UNDEFINED = 0,
@@ -57,6 +64,9 @@ int tokenidx = 0;
 int main (int argc, char* argv[]) {
     int filesize = 0;
     int c = 0;
+    char isAdmin = 0;
+    char password[] = "loveisanopendoor";
+    char inputpassword[20];
 
     printf("filename : %s\n", argv[1]);
     char * filename = argv[1];
@@ -65,46 +75,87 @@ int main (int argc, char* argv[]) {
     if (file == NULL) return -1;
 
     startParse(filesize);
-    
-    while(1){
-        printMenu();
-        printf("Input : "); 
-        scanf("%d", &c); getchar();
-        
-        switch(c){
-            case 0 : 
-                printTokens();
-                break;
-            case 1 : 
-                randomMatching();
-                break;
-            case 2 : 
-                seeClient();
-                break;
-            case 3 :
-                seeClientbyAge();
-                break;
-            case 4 :
-                seeClientbyGender();
-                break;
-            case 5 :
-                seeClientbyHobby();
-                break;
-            case 6 : 
-                seeClientbyLocalInfo();
-                break;
-            case 7 :
-                seeClientbyCommpany();
-                break;
-            case 8 :
-                seeClientbyEmail();
-                break;
-            case 99 :
-                printf("- SYS END -\n");
-                return 0;
-            default :
-                wrongInput();
+    printNewWindow();
+    scanf("%c", &isAdmin);
+    if(tolower(isAdmin)=='a'){
+        printf("Enter Password: ");
+        scanf("%s",inputpassword);
+        if(strcmp(inputpassword, password)){
+            printf("You Entered Wrong Password!!!!!\n");
+            exit(0);
+        }else{
+            while(1){
+                printMenu();
+                printf("Input : "); 
+                scanf("%d", &c); getchar();
+                
+                switch(c){
+                    case 0 : 
+                        printTokens();
+                        break;
+                    case 1 : 
+                        randomMatching();
+                        break;
+                    case 2 : 
+                        seeClient();
+                        break;
+                    case 3 :
+                        seeClientbyAge();
+                        break;
+                    case 4: 
+                        seeClientbyGender();
+                        break;
+                    case 5:
+                        seeClientbyHobby();
+                        break;
+                    case 6: 
+                        seeClientbyLocalInfo();
+                        break;
+                    case 7: 
+                        seeClientbyCommpany();
+                        break;
+                    case 8:
+                        seeClientbyEmail();
+                        break;
+                    case 99 :
+                        printf("- SYS END -\n");
+                        return 0;
+                    default :
+                        wrongInput();
+                }
+            }
         }
+    }else if(tolower(isAdmin)=='c'){
+            int index;
+            while(1){
+                printClientMenu();
+                printf("Input : ");
+                scanf("%d",&index);
+                switch(index){
+                case 0 : 
+                    randomMatchClientVer();
+                    break;
+                case 1 : 
+                    showClientAge();
+                    break;
+                case 2 : 
+                    showClientCompany();
+                    break;
+                case 3 :
+                    showClientEmail();
+                    break;
+                case 4: 
+                    showClientPhoneNum();
+                    break;
+                case 99 :
+                    printf("- SYS END -\n");
+                    return 0;
+                default :
+                    wrongInput();
+            }
+        }
+    }else{
+        wrongInput();
     }
 
     return 0;
@@ -376,7 +427,7 @@ void seeClient(){
         }
     }
     printf("*****************\n");
-    printf("** NOT EXISTED **\n");
+    printf("** NOT EXIST **\n");
     printf("*****************\n");
 }
 
@@ -515,6 +566,197 @@ void seeClientbyEmail(){
         }
     }
     printf("*****************\n");
-    printf("** NOT EXISTED **\n");
+    printf("** NOT EXIST **\n");
     printf("*****************\n");
+}
+
+void randomMatchClientVer(){
+    //get conditions from user
+    char privateNo[50];
+    int cnt = 0;
+    int cnt2=0;
+    int this_age;
+    bool exist = false;
+    char this_gender[10];
+    int expect_age;
+    char expect_hobby[50];
+    char clients_Age[50][256];
+    char clients_filtered[50][256];
+    int s=0;
+    printf("type your private number: ");
+    scanf("%s", privateNo);
+    
+
+    //if privateNo doesn't exist error!
+    for(int i=0; i< totaltokensize; i++){
+        if(mystrcmp("id",tokens[i].start, tokens[i].end) && tokens[i].size == 1){
+            if(mystrcmp(privateNo, tokens[i+1].start, tokens[i+1].end)){
+               
+                exist = true;
+                break;
+            }
+        }
+    }
+
+    if(exist== false){
+        printf("You're not a member of us! Join us!\n");
+        return;
+    }
+
+    
+ 
+    //get client info
+    for(int i =0; i < totaltokensize; i++){
+        if(mystrcmp("id", tokens[i].start, tokens[i].end) && tokens[i].size == 1 && mystrcmp(privateNo,tokens[i+1].start,tokens[i+1].end)){
+            
+            strcpy(this_gender, extractToken(tokens[i+7].start, tokens[i+7].end));
+            
+        }
+    }
+    printf("Under what age you want your partner to be?: ");
+    scanf("%d", &expect_age);
+    
+    
+    //filter clients with age
+    for(int i=0; i< totaltokensize; i++){
+      if(mystrcmp("age", tokens[i].start, tokens[i].end) && tokens[i].size == 1){
+            if(atoi(extractToken(tokens[i+1].start, tokens[i+1].end)) <= expect_age && !mystrcmp(this_gender,tokens[i+5].start,tokens[i+5].end) && !mystrcmp(privateNo,tokens[i-1].start, tokens[i-1].end)){
+              strcpy(clients_Age[s++],extractToken(tokens[i+3].start, tokens[i+3].end));
+              cnt++;
+            }
+        }
+    }
+
+    fflush(stdin);
+    printf("What kind of hobby you want your partner to have?: ");
+    gets(expect_hobby);
+   
+   
+    
+    //filter 한 애들 대상으로 Hobby로 filter
+    for(int i=0,k=0; i< cnt; i++){
+        for(int j=0; j<totaltokensize; j++){
+            if(mystrcmp("name", tokens[j].start,tokens[j].end) && tokens[j].size==1 && mystrcmp(clients_Age[i],tokens[j+1].start, tokens[j+1].end)){
+                if(mystrcmp(expect_hobby, tokens[j+11].start, tokens[j+11].end)){
+                 
+                    strcpy(clients_filtered[cnt2],clients_Age[i]);
+                    
+                    cnt2++;
+                }
+            }
+        }
+
+    }
+
+  
+
+        if(cnt2==0){
+            printf("Sorry No Match... Why don't you lower your expectations?\n");
+            fflush(stdin);
+            return;
+        }else if(cnt2==1){
+            printf("--------------Matching Result-------------------\n");
+            printf("%s\n", clients_filtered[cnt2-1]);
+            fflush(stdin);
+            return;
+        }else if(cnt>1){
+            srand(time(NULL));
+            printf("--------------Matching Result-------------------\n");
+            printf("%s\n", clients_filtered[rand()%cnt2]);
+            fflush(stdin);
+            return;
+        }
+
+    
+
+    }
+
+
+    void showClientAge(){
+    char getname[50];
+    printf("Type the name of a person you want to know about his/her age(Case Sensitive)\n");
+    fflush(stdin);
+    gets(getname);
+    for(int i=0; i<totaltokensize;i++){
+        if(mystrcmp("name", tokens[i].start, tokens[i].end)&& tokens[i].size ==1 ){
+            
+            if(mystrcmp(getname, tokens[i+1].start,tokens[i+1].end)){
+            printf("%s's age is %s years old\n", extractToken(tokens[i+1].start, tokens[i+1].end), extractToken(tokens[i-1].start,tokens[i-1].end));
+            return;
+            }
+        }
+    }
+    printf("There's no such name as %s in our database, please check the spelling(Case Sensitive)\n",getname);
+    return;
+}
+
+void showClientCompany(){
+    char getname[50];
+    printf("Type the name of a person you want to know about his/her job\n");
+    fflush(stdin);
+    gets(getname);
+    for(int i=0; i<totaltokensize;i++){
+        if(mystrcmp("name", tokens[i].start, tokens[i].end) && tokens[i].size==1){
+            if(mystrcmp(getname, tokens[i+1].start, tokens[i+1].end)){
+                printf("%s's company is %s!\n", getname,extractToken(tokens[i+5].start, tokens[i+5].end));
+                return;
+            }
+        }
+    
+    }
+    printf("There's no such name as %s in out database, please check the spelling\n",getname);
+    return;
+}
+
+void showClientEmail(){
+    char getname[50];
+    printf("Type the name of a person you want to know about his/her Email(Case Sensitive)\n");
+    fflush(stdin);
+    gets(getname);
+    for(int i=0; i<totaltokensize;i++){
+        if(mystrcmp("name", tokens[i].start, tokens[i].end) && tokens[i].size==1){
+            if(mystrcmp(getname, tokens[i+1].start, tokens[i+1].end)){
+                printf("%s's email is %s!\n", getname,extractToken(tokens[i+7].start, tokens[i+7].end));
+                return;
+            }
+        }
+    
+    }
+    printf("There's no such name as %s\n",getname);
+    return;
+}
+
+void showClientPhoneNum(){
+    char getname[50];
+    printf("Type the name of a person you want to know about his/her Phone Number(Case Sensitive)\n");
+    fflush(stdin);
+    gets(getname);
+    for(int i=0; i<totaltokensize;i++){
+        if(mystrcmp("name", tokens[i].start, tokens[i].end) && tokens[i].size==1){
+            if(mystrcmp(getname, tokens[i+1].start, tokens[i+1].end)){
+                printf("%s's phne number is %s!\n", getname,extractToken(tokens[i+9].start, tokens[i+9].end));
+                return;
+            }
+        }
+    
+    }
+    printf("There's no such name as %s\n",getname);
+    return;
+}
+
+void printNewWindow(){
+    printf("------------Welcome to loveisabuisness.com!-------------\n");
+    printf("If you are administrator press 'A'\n");
+    printf("If you are not, just press 'C' to continue\n");
+}
+
+void printClientMenu(){
+    printf("----------Welcome to www.loveisanopendoor.com !!!----------\n");
+    printf("0. Random Matching: According to conditions\n");
+    printf("1. Get Age Information of other Client\n");
+    printf("2. Get Job Information of other Client\n");
+    printf("3. Get Email of other Client\n");
+    printf("4. Get Phone Number of other Client\n");
+    printf("99. Quit\n"); 
+    printf("----------------------------------------------\n");
 }
