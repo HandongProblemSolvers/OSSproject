@@ -194,7 +194,7 @@ void startParse(int filesize) {
 int parsePrimitive(int pos) {
     tokens[tokenidx].type = PRIMITIVE;
     tokens[tokenidx].start = pos;
-    while(file[pos] != ','){
+    while( (file[pos] != ']') && (file[pos] != ',') && (file[pos] != '}') && (file[pos] != ' ') && (file[pos] != '\n')) {
         pos++;
     }
     tokens[tokenidx].end = pos;
@@ -205,7 +205,6 @@ int parsePrimitive(int pos) {
 
 int parseObject(int pos) {
     int initpos = pos;
-    int endpos = 0;
     int cnt = 0;
     int flag = 0;
     pos++;
@@ -214,11 +213,11 @@ int parseObject(int pos) {
         if( (file[pos] == '}') && (cnt == 0) ) break; 
         if( (file[pos] == '{') || (file[pos] == '[') )  {
             cnt++;
-            flag = 1;
+            flag++;
         }
-        if( (file[pos] == '{') || (file[pos] == ']') ) {
+        if( (file[pos] == '}') || (file[pos] == ']') ) {
             cnt--;
-            flag = 0;
+            flag--;
         }
         if( (file[pos] == ',') && (flag == 0) ) {
             tokens[tokenidx].size++;
@@ -248,7 +247,6 @@ int parseString(int pos) {
 
 int parseArray(int pos) {
     int initpos = pos;
-    int endpos = 0;
     int cnt = 0;
     int flag = 0;
     pos++;
@@ -257,11 +255,11 @@ int parseArray(int pos) {
         if( (file[pos] == ']') && (cnt == 0) ) break; 
         if( (file[pos] == '[') || (file[pos] == '{') )  {
             cnt++;
-            flag = 1;
+            flag++;
         }
         if( (file[pos] == ']') || (file[pos] == '}') ) {
             cnt--;
-            flag = 0;
+            flag--;
         }
         if( (file[pos] == ',') && (flag == 0) ) {
             tokens[tokenidx].size++;
@@ -289,13 +287,6 @@ char * readfile(char * filename, int * filesize) {
     buffer = (char *)malloc(size + 1);
     memset(buffer, 0, size + 1);
 
-    // change this fread function's argument into fread(buffer, 1, size, fp) in Windows OS
-    // if(fread(buffer, size, 1, fp) < 1) {
-    //     *filesize = 0;
-    //     free(buffer);
-    //     fclose(fp);
-    //     return NULL;
-    // }
     if(FREAD(buffer, size, 1, fp) < 1) {
         *filesize = 0;
         free(buffer);
