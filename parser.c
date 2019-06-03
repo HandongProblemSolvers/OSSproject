@@ -46,13 +46,13 @@ int main (int argc, char* argv[]) {
     if (file == NULL) return -1;
 
     startParse(filesize);
-    
+    char * token_types[5] = {"UNDEFINED", "OBJECT", "ARRAY", "STRING", "PRIMITIVE"};
     for(i = 0; i < totaltokensize; i++) {
         printf("[ %d] ", i);
         for(j = tokens[i].start; j < tokens[i].end; j++) {
             printf("%c", file[j]);
         }
-        printf(" (size=%d, %d~%d, JSMN_%u))", tokens[i].size, tokens[i].start, tokens[i].end, tokens[i].type);
+        printf(" (size=%d, %d~%d, JSMN_%s))", tokens[i].size, tokens[i].start, tokens[i].end, token_types[tokens[i].type]);
         printf("\n");
     }
     return 0;

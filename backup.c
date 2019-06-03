@@ -320,11 +320,12 @@ void wrongInput(){
 }
 
 void printTokens(){
+    char * token_types[5] = {"UNDEFINED", "OBJECT", "ARRAY", "STRING", "PRIMITIVE"};
     for(int i = 0; i < totaltokensize; i++) {
         printf("[ %d] ", i+1);
         for(int j = tokens[i].start; j < tokens[i].end; j++)
             printf("%c", file[j]);
-        printf(" (size=%d, %d~%d, JSMN_%u))\n", tokens[i].size, tokens[i].start, tokens[i].end, tokens[i].type);
+        printf(" (size=%d, %d~%d, JSMN_%s))\n", tokens[i].size, tokens[i].start, tokens[i].end, token_types[tokens[i].type]);
     }
 }
 
