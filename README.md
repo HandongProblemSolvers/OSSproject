@@ -1,12 +1,11 @@
 # OSS json parser
 
-1. understanding on json parser
-
+1. Understanding on json parser
    - json file is basically text file which is independent from certain programming language
 
    - it contains various data with designed syntax which is universally promised
 
-2. process
+2. Process
 
    - first, read json file in C file
    - consider the whole data as sequence of characters
@@ -15,7 +14,7 @@
    - there are some query to find some useful data quickly
    - there is function that makes random matching list
 
-3. implementation progress
+3. Implementation progress
 
    - complete file read
    - complete json parsing
@@ -39,7 +38,10 @@
              - parseArray  
                   - array starts and ends with '[', ']' bracket character.  
                   - just same as object. consider the nested cases.
-	- complete Funtions that manage application
+# Apllication
+1. Implementaion progress
+
+	- complete funtions that manage application
 		- mystrcmp
 			- This function is useful,  this is used for compare certain words and token’s words.
 		- extractToken
@@ -52,7 +54,7 @@
 		- printTokens
 			- It just print all token information.
 	- complete functions of Application
-      		- printTokens
+		- printTokens
 			- It just print all token information.
 		- randomMatching
 			- Using rand function, it generates random matching list. 
@@ -72,4 +74,37 @@
 			- If manager types the Email, this function find cilent with that e-mail, and show the entire information.
 		- seeClientbyLocalInfo
 			- If manager types Area Code in phone number, this functions shows clients with the given Area code. 
+
+2. Project Description
+	- Our Application is program that manage meeting application
+		- Use Json file of clients informations
+		- There are two main mode, one is Admin mode, and the other is client mode
+		- Admin mode can see all clients by each information
+		- Client mode can find person who want to dating
+	- This Application is useful to person who want to dating
+		- Users can find their date mate with information such as hobbies and ages.
+		- They can also find date mate completely random.
+3. How to start this App
+	- First, you should chose one of two mode(Admin, client)
+	- If chose 'Admin'
+		- Frist you have to enter password
+		- In Admin mode, you can see all of clients informations.
+		- There are functions that can be retrieved under various conditions.
+	- If chose 'client'
+		- First you enter your private number.
+		- And then, conditions about your interest.
+		- What you get is randomly chosen(with conditions fulfilled) person’s name. 
+		- If you are too ‘picky’ person so, if there’s no match.
+		- Since you got name of other client you can get information about that client, Name, Job, Email, and phone number.
+
+4. More information or Help
+	- If you want more information or need help, plz send email
+		- 21500426@handong.edu
+		- 21300186@handong.edu
+		- 21500050@handong.edu
+		- 21400738@handong.edu
+
+
+
+
 
