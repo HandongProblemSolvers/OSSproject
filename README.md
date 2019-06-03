@@ -38,12 +38,38 @@
                   - so declare counting and flag variable for correct counting of values in object.  
              - parseArray  
                   - array starts and ends with '[', ']' bracket character.  
-                  - just same as object. consider the nested cases.  
-      2. print all parsing data
-      3. random matching
-      4. see client information
-      5. see client by genger
-      6. see client by hobby
-      7. see clients by age limit
-      8. see clients by company
-      9. see client information by e-mail
+                  - just same as object. consider the nested cases.
+	- complete Funtions that manage application
+		- mystrcmp
+			- This function is useful,  this is used for compare certain words and token’s words.
+		- extractToken
+			- This function extracts the string from certain token
+			- We know the range of all token,  just using this index we can convert token to string we can use.
+		- printMenu
+			- It just print main menu for manager.  
+		- wrongInput
+			- It just print error message for manager.
+		- printTokens
+			- It just print all token information.
+	- complete functions of Application
+      		- printTokens
+			- It just print all token information.
+		- randomMatching
+			- Using rand function, it generates random matching list. 
+			- One male and one female are matched.
+			- If male is more than female, some male can’t make matching female.
+		- seeClient
+			- If manager types the name, this function lists the information about client who have that name.
+		- seeClientbyGenger
+			- If manager types the gender, this function lists all client by gender
+		- seeClientby]Hobby
+			- If manager types the age by number, this function lists all clients by exist hobby in clients information
+		- seeClientsbyAge
+			- If manager types the age by number, this function lists all clients under that age.	
+		- seeClientsbyCompany
+			- If manager types the company, this function lists all client with that commay
+		- seeClientinbyEmail
+			- If manager types the Email, this function find cilent with that e-mail, and show the entire information.
+		- seeClientbyLocalInfo
+			- If manager types Area Code in phone number, this functions shows clients with the given Area code. 
+
