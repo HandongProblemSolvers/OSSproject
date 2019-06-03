@@ -7,6 +7,10 @@
 
 #define MIN(a,b) (((a) < (b)) ? (a) : (b))
 #define MAX(a,b) (((a) > (b)) ? (a) : (b))
+#define WINDOW
+#ifdef WINDOW
+#define FREAD(x, y, z, a) fread(x, z, y, a)
+#endif
 
 char * readfile(char * , int * );
 void startParse(int );
@@ -286,7 +290,13 @@ char * readfile(char * filename, int * filesize) {
     memset(buffer, 0, size + 1);
 
     // change this fread function's argument into fread(buffer, 1, size, fp) in Windows OS
-    if(fread(buffer, size, 1, fp) < 1) {
+    // if(fread(buffer, size, 1, fp) < 1) {
+    //     *filesize = 0;
+    //     free(buffer);
+    //     fclose(fp);
+    //     return NULL;
+    // }
+    if(FREAD(buffer, size, 1, fp) < 1) {
         *filesize = 0;
         free(buffer);
         fclose(fp);
