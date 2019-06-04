@@ -1,4 +1,4 @@
-# OSS json parser
+# OSS json parser ('backup.c' is the final source code!! plz only see the backup.c!!)
 
 1. Understanding on json parser
    - json file is basically text file which is independent from certain programming language
